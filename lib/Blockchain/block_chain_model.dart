@@ -24,8 +24,9 @@ class BlockChainModel extends ChangeNotifier {
   ContractFunction? _getParty;
   ContractFunction? _vote;
   String partyName = " ";
-  // bool isLoading = false;
+  bool isLoading = true;
   BigInt? votes;
+  // ignore: prefer_typing_uninitialized_variables
   var _abiCode;
   Credentials? _credentials;
   Future<void> initialSetup() async {
@@ -38,6 +39,7 @@ class BlockChainModel extends ChangeNotifier {
     await getDeployedContract();
   }
 
+  // ignore: prefer_typing_uninitialized_variables
   var jsonAbi;
   String abiStringFile = "";
   Future<void> getAbi() async {
@@ -58,7 +60,6 @@ class BlockChainModel extends ChangeNotifier {
   Future<void> getDeployedContract() async {
     _contract = DeployedContract(
         ContractAbi.fromJson(_abiCode, "Auth"), _contractAddress!);
-    // _voteCount = _contract.function("votes");
     _getParty = _contract!.function("getParty");
     _getVotes = _contract!.function("getVotes");
     _vote = _contract!.function("vote");
@@ -67,7 +68,7 @@ class BlockChainModel extends ChangeNotifier {
         .call(contract: _contract!, function: _getVotes!, params: []));
   }
 
-  Future<void>  getData() async {
+  Future<void> getData() async {
     List party = await _web3client!
         .call(contract: _contract!, function: _getParty!, params: []);
     partyName = party[0];
@@ -76,19 +77,21 @@ class BlockChainModel extends ChangeNotifier {
         .call(contract: _contract!, function: _getVotes!, params: []);
     print(count[0]);
     votes = count[0];
-    // isLoading = false;
+    isLoading = false;
+    print("==============");
     notifyListeners();
   }
 
   Future<void> addVote(bool hasAuth, String partyName) async {
-    // isLoading = true;
+    isLoading = true;
     notifyListeners();
+    print("---------------------");
     await _web3client!.sendTransaction(
         _credentials!,
         Transaction.callContract(
             contract: _contract!,
             function: _vote!,
             parameters: [hasAuth, partyName]));
-     getData();
+    getData();
   }
 }

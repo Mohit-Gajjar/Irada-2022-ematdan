@@ -17,38 +17,33 @@ class _BlockChainState extends State<BlockChain> {
   @override
   Widget build(BuildContext context) {
     final contractConnect = Provider.of<BlockChainModel>(context);
-    return Scaffold(
-        body: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          "Votes:\n" + contractConnect.votes.toString(),
-          style: const TextStyle(fontSize: 30),
-        ),
-        Text(
-          "Party Name:\n" + contractConnect.partyName.toString(),
-          style: const TextStyle(fontSize: 30),
-        ),
-        ElevatedButton(
-            onPressed: () async {
-              await contractConnect.addVote(true, "BJP");
-              setState(() {});
-            },
-            child: const Text(
-              'Add Vote',
-              style: TextStyle(fontSize: 30),
-            )),
-        //   ElevatedButton(
-        // onPressed: () {},
-        // child: const Text(
-        //   'Get Vote',
-        //   style: TextStyle(fontSize: 30),
-        // )),
-      ],
-    ));
-    // : const Center(
-    //     child: CircularProgressIndicator(),
-    //   );
+    return contractConnect.isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : Scaffold(
+            body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Votes: " + contractConnect.votes.toString(),
+                style: const TextStyle(fontSize: 30),
+              ),
+              Text(
+                "Party Name: " + contractConnect.partyName.toString(),
+                style: const TextStyle(fontSize: 30),
+              ),
+              ElevatedButton(
+                  onPressed: () async {
+                    await contractConnect.addVote(true, "BJP");
+                    setState(() {});
+                  },
+                  child: const Text(
+                    'Add Vote',
+                    style: TextStyle(fontSize: 30),
+                  )),
+            ],
+          ));
   }
 }

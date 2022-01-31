@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "370557383",
+    "project_id": "e-matdan",
+    "storage_bucket": "e-matdan.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370557383:android:b0e5d0c5242694496919e2",
+        "android_client_info": {
+          "package_name": "com.example.ematdan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "370557383-iaikeenj22ijf2fppo7uf6qblfhjsjdu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ematdan",
+            "certificate_hash": "c82a17f56e70ffac32f949ff28d8e425bf4a0d7f"
+          }
+        },
+        {
+          "client_id": "370557383-fqqhs4eftdemjrhbfrpmu38afph6j2l8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_IYtfW58NM7xnrkl2xdku3t84edxRuo4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "370557383-fqqhs4eftdemjrhbfrpmu38afph6j2l8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
