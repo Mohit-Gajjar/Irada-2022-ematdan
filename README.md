@@ -5,7 +5,7 @@
 
 ## How to Use?
 
-1). There are two options available to Log-in as, Organizer and Elector.
+1). Log-in as, Organizer and Elector.
 
 2). The organizer can add candidates to an election and upload the candidates. The organizer can also remove a candidate and edit his/her details.
 
@@ -16,6 +16,8 @@
 ## Features
 
 - Very secure beacause of blockchain - no one can alter votes.
+- 
+- No need to travel to the voting booths, You can vote anywhere from the world.
 
 - It is very time efficient and votes are added in real time.
 
