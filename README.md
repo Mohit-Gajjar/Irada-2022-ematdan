@@ -33,7 +33,7 @@
 
 ## Tech/Framework used
 
-- Block-chain using Solidity
+- Ethereum Block-chain using Solidity
 
 - Flutter | Dart
 
