@@ -1,0 +1,55 @@
+const Auth = artifacts.require("Auth");
+
+module.exports = function (deployer) {
+  deployer.deploy(Auth);
+};
+
+
+
+
+pragma solidity 0.5.16;
+
+contract Auth{
+   int votes;
+    
+
+    constructor() public {
+        votes = 0;
+    }
+
+    function getVotes() view public returns(int){
+        return votes;
+    }
+
+    function vote(bool hasAuth) public {
+        if(hasAuth == true){      
+            votes = votes + 1;
+        }
+    }
+   
+}
+
+
+
+
+module.exports = {
+  networks: {
+    development: {
+      host: "192.168.0.109",
+      port: 7545,
+      network_id: "*",
+    },
+    advanced: {
+      websockets: true,
+    },
+    contracts_build_directory: "./src/abis/",
+    compilers: {
+      solc: {
+        optimiser: {
+          enabled: true,
+          runs: 200,
+        },
+      },
+    },
+  },
+};

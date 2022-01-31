@@ -1,6 +1,9 @@
-import 'dart:html';
-
+import 'package:ematdan/Blockchain/block_chain_model.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 import 'package:web3dart/web3dart.dart';
 
 class BlockChain extends StatefulWidget {
@@ -11,12 +14,41 @@ class BlockChain extends StatefulWidget {
 }
 
 class _BlockChainState extends State<BlockChain> {
-  late Client httpClient;
-  late Web3Client ethClient;
-
-  final myaddress = "0x1f7fB8022D571529cd6a8B012e47058F1db2B498";
   @override
   Widget build(BuildContext context) {
-    return Container();
+    final contractConnect = Provider.of<BlockChainModel>(context);
+    return Scaffold(
+        body: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          "Votes:\n" + contractConnect.votes.toString(),
+          style: const TextStyle(fontSize: 30),
+        ),
+        Text(
+          "Party Name:\n" + contractConnect.partyName.toString(),
+          style: const TextStyle(fontSize: 30),
+        ),
+        ElevatedButton(
+            onPressed: () async {
+              await contractConnect.addVote(true, "BJP");
+              setState(() {});
+            },
+            child: const Text(
+              'Add Vote',
+              style: TextStyle(fontSize: 30),
+            )),
+        //   ElevatedButton(
+        // onPressed: () {},
+        // child: const Text(
+        //   'Get Vote',
+        //   style: TextStyle(fontSize: 30),
+        // )),
+      ],
+    ));
+    // : const Center(
+    //     child: CircularProgressIndicator(),
+    //   );
   }
 }

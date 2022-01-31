@@ -1,7 +1,12 @@
+import 'package:ematdan/Blockchain/block.dart';
+import 'package:ematdan/Blockchain/block_chain_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
+  
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -9,17 +14,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const Root()
+    return ChangeNotifierProvider(
+      create: (context)=> BlockChainModel(),
+      child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: const Root()),
     );
   }
 }
+
 class Root extends StatefulWidget {
-  const Root({ Key? key }) : super(key: key);
+  const Root({Key? key}) : super(key: key);
 
   @override
   _RootState createState() => _RootState();
@@ -28,8 +36,6 @@ class Root extends StatefulWidget {
 class _RootState extends State<Root> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
-    );
+    return const BlockChain();
   }
 }
