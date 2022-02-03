@@ -1,10 +1,6 @@
 import 'package:ematdan/Blockchain/block_chain_model.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
-import 'package:web3dart/web3dart.dart';
 
 class BlockChain extends StatefulWidget {
   const BlockChain({Key? key}) : super(key: key);
@@ -27,20 +23,16 @@ class _BlockChainState extends State<BlockChain> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Votes: " + contractConnect.votes.toString(),
-                style: const TextStyle(fontSize: 30),
-              ),
-              Text(
-                "Party Name: " + contractConnect.partyName.toString(),
+                "Winner: " + contractConnect.winnerName!,
                 style: const TextStyle(fontSize: 30),
               ),
               ElevatedButton(
                   onPressed: () async {
-                    await contractConnect.addVote(true, "BJP");
+                    await contractConnect.addCandidates();
                     setState(() {});
                   },
                   child: const Text(
-                    'Add Vote',
+                    'Add Candidates',
                     style: TextStyle(fontSize: 30),
                   )),
             ],

@@ -11,7 +11,7 @@ class Login extends StatelessWidget {
         body: Stack(
           children: [
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
+              margin:const EdgeInsets.symmetric(horizontal: 20),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -63,12 +63,12 @@ class Login extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8.0),
                           )),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Container(
                       // margin: EdgeInsets.symmetric(horizontal: 20),
                   alignment: Alignment.center,
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(fixedSize:Size (600,40),
+                    style: ElevatedButton.styleFrom(fixedSize:const Size (600,40),
                       primary: const Color(0xFF3D4660),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),),
@@ -97,7 +97,7 @@ class Login extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 10),
                   alignment: Alignment.center,
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(fixedSize:Size (500,40),
+                    style: ElevatedButton.styleFrom(fixedSize:const Size (500,40),
                       primary: const Color(0xFF3D4660),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),),
