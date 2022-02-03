@@ -1,74 +1,44 @@
 pragma solidity 0.5.16;
 
 contract Auth {
-    struct Voter {
-        uint256 weight;
-        bool voted;
-        address delegate;
-        uint256 vote;
+    
+    struct Candidate {
+        uint   id;
+        string name;
+        uint   voteCount;
     }
-    struct Proposal {
-        bytes32 name;
-        uint256 voteCount;
+  struct Proposal {
+        string name;   // short name (up to 32 bytes)
+        int voteCount; // number of accumulated votes
     }
-    address public chairperson;
+ Proposal[] public proposals;
 
-    mapping(address => Voter) public voters;
-
-    Proposal[] public proposals;
-
-    function getProposals(bytes32[] memory proposalNames) public {
-        chairperson = msg.sender;
-        voters[chairperson].weight = 1;
-
-        for (uint i = 0; i <proposalNames.length; i++){
-            proposals.push(Proposal({name: proposalNames[i], voteCount: 0}));
-        }
-    }
-
-    function giveRightToVote(address voter) external {
-        require(
-            msg.sender == chairperson,
-            "Only chairperson can give right to vote."
+    mapping(address => bool) public voters;
+    mapping(uint => Candidate) public candidates;
+    uint public candidatesCount;    
+    
+    // voted event
+    event votedEvent (
+        uint indexed _candidateId
         );
-        require(!voters[voter].voted, "The voter already voted.");
-
-        require(voters[voter].weight == 0);
-        voters[voter].weight = 1;
+    function addCandidate(string memory _name) public {
+        candidatesCount++;
+        candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
+		proposals.push(Proposal({name: _name, voteCount:0}));
     }
 
-    function delegate(address to) external {
-        Voter storage sender = voters[msg.sender];
-        require(!sender.voted, "you already voted.");
+    function vote (uint _candidateId) public {
+        require(!voters[msg.sender]);
 
-        require(to != msg.sender, "Self-delegation is disallowed.");
+        require(_candidateId > 0 && _candidateId <= candidatesCount);
 
-        while (voters[to].delegate != address(0)) {
-            to = voters[to].delegate;
-            require(to != msg.sender, "Found loop in delegation.");
-        }
-        sender.voted = true;
-        sender.delegate = to;
-        Voter storage delegate_ = voters[to];
-        if (delegate_.voted) {
-            proposals[delegate_.vote].voteCount += sender.weight;
-        } else {
-            delegate_.weight += sender.weight;
-        }
-    }
-
-    function vote(uint256 proposal) external {
-        Voter storage sender = voters[msg.sender];
-        require(sender.weight != 0, "Has no right to vote");
-        require(!sender.voted, "Already voted.");
-        sender.voted = true;
-        sender.vote = proposal;
-
-        proposals[proposal].voteCount += sender.weight;
+        voters[msg.sender] = true;
+        candidates[_candidateId].voteCount ++;
+        emit votedEvent(_candidateId);
     }
 
     function winningProposal() public view returns (uint256 winningProposals_) {
-        uint256 winningVoteCount = 0;
+        int  winningVoteCount = 0;
         for (uint256 p = 0; p < proposals.length; p++) {
             if (proposals[p].voteCount > winningVoteCount) {
                 winningVoteCount = proposals[p].voteCount;
@@ -77,7 +47,7 @@ contract Auth {
         }
     }
 
-    function winnerName() external view returns (bytes32 winnerName_) {
+	function winnerName() external view returns (string memory winnerName_) {
         winnerName_ = proposals[winningProposal()].name;
     }
 }

@@ -1,18 +1,17 @@
+import 'package:ematdan/Pages/add_party.dart';
 import 'package:ematdan/Pages/candidates.dart';
-import 'package:ematdan/Pages/addbooth.dart';
-import 'package:ematdan/Pages/parties.dart';
 import 'package:ematdan/Services/firebase.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class Parties extends StatefulWidget {
+  final String boothId;
+  const Parties({Key? key, required this.boothId}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _PartiesState createState() => _PartiesState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _PartiesState extends State<Parties> {
   Stream? getBoothSteam;
   @override
   void initState() {
@@ -29,10 +28,9 @@ class _HomePageState extends State<HomePage> {
               ? ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
-                    return ListBooths(
-                      subtitle: snapshot.data.docs[index]["organiser"],
-                      title: snapshot.data.docs[index]["organisation"],
-                      id: snapshot.data.docs[index]["boothId"],
+                    return PartyTile(
+                      partyName: snapshot.data.docs[index]["partyName"],
+                      id: widget.boothId,
                     );
                   })
               : const Center(
@@ -42,7 +40,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   getDataFunction() {
-    Database().getBooth().then((val) {
+    Database().getParties(widget.boothId).then((val) {
       getBoothSteam = val;
       setState(() {});
     });
@@ -53,50 +51,44 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Booths',
+          'Parties',
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: Container(
-        child: getBooth(),
-      ),
+      body: getBooth(),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const AddBooth())),
+            context,
+            MaterialPageRoute(
+                builder: (context) => AddParty(boothId: widget.boothId))),
       ),
     );
   }
 }
 
-class ListBooths extends StatelessWidget {
-  final String title, subtitle, id;
-  const ListBooths(
-      {Key? key, required this.title, required this.subtitle, required this.id})
+class PartyTile extends StatelessWidget {
+  final String partyName, id;
+  const PartyTile({Key? key, required this.partyName, required this.id})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {
-        Clipboard.setData(ClipboardData(text: id)).then((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Booth Id copied to clipboard")));
-        });
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>  Parties(boothId: id,)));
-      },
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Candidates(
+                    name: partyName,
+                    id: id,
+                  ))),
       leading: CircleAvatar(
-        radius: 30,
-        child: Text(title[0]),
+        child: Text(partyName[0]),
       ),
-      title: Text(title),
-      subtitle: Text(subtitle),
+      title: Text(partyName),
     );
   }
 }

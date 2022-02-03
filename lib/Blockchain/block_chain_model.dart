@@ -11,7 +11,7 @@ class BlockChainModel extends ChangeNotifier {
   final String _wsUrl = "ws://192.168.0.109:7545/";
 
   final String privateKey =
-      "59e601b43442e966bd5d4e59bf391f64e9371342a7c6332ffd611f24a0b08200";
+      "be0f42724bf2e0cebc941de82f0a01098eb3e3a7abf61b81d2c4085d5247d3d5";
 
   BlockChainModel() {
     initialSetup();
@@ -21,11 +21,11 @@ class BlockChainModel extends ChangeNotifier {
   EthereumAddress? _contractAddress;
   DeployedContract? _contract;
   ContractFunction? _getWinningCandidate;
-  // ContractFunction? _getParty;
+  ContractFunction? _getCandidateCount;
   ContractFunction? _addCandidates;
   // String partyName = " ";
   bool isLoading = true;
-  String? winnerName;
+  BigInt? winnerName;
   // ignore: prefer_typing_uninitialized_variables
   var _abiCode;
   Credentials? _credentials;
@@ -61,8 +61,8 @@ class BlockChainModel extends ChangeNotifier {
     _contract = DeployedContract(
         ContractAbi.fromJson(_abiCode, "Auth"), _contractAddress!);
     // _getParty = _contract!.function("getParty");
-    _getWinningCandidate = _contract!.function("winnerName");
-    _addCandidates = _contract!.function("getProposals");
+    _getCandidateCount = _contract!.function("candidatesCount");
+    _addCandidates = _contract!.function("addCandidate");
     getData();
     print(await _web3client!.call(
         contract: _contract!, function: _getWinningCandidate!, params: []));
@@ -74,7 +74,7 @@ class BlockChainModel extends ChangeNotifier {
     // partyName = party[0];
     // print(party[0]);
     List winner = await _web3client!.call(
-        contract: _contract!, function: _getWinningCandidate!, params: []);
+        contract: _contract!, function: _getCandidateCount!, params: []);
     print(winner[0]);
     winnerName = winner[0];
     isLoading = false;
@@ -82,18 +82,16 @@ class BlockChainModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addCandidates() async {
-    isLoading = true;
-    notifyListeners();
+  Future<void> addCandidates(String candidateName) async {
+    // isLoading = true;
+    // notifyListeners();
     print("---------------------");
     await _web3client!.sendTransaction(
         _credentials!,
         Transaction.callContract(
             contract: _contract!,
             function: _addCandidates!,
-            parameters: [  '0x9b763C830d5AE28253F661f5758c7Dff82cA5f3A',
-                     ' 0xb2Cd5845e3725e72407DA9F1159D53A319F32F5f',
-                     ' 0x957c0F58A24D58e4726CE7b3B2eda5279A462eD4']));
+            parameters: [ candidateName ]));
     getData();
   }
 }

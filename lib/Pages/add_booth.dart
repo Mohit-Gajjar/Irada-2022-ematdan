@@ -1,8 +1,8 @@
 import 'package:ematdan/Pages/login.dart';
 import 'package:flutter/material.dart';
 
-class Booth extends StatelessWidget {
-  const Booth({ Key? key }) : super(key: key);
+class AddBooth extends StatelessWidget {
+  const AddBooth({ Key? key }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +17,8 @@ class Booth extends StatelessWidget {
                child: Column(
                  mainAxisAlignment: MainAxisAlignment.center,
                  children: [
-                   Text("Create Voting Booth",style: TextStyle(fontSize: 15,color: Colors.black),),
-                   SizedBox(height: 20),
+                  const Text("Create Voting Booth",style: TextStyle(fontSize: 15,color: Colors.black),),
+                   const SizedBox(height: 20),
                      TextFormField(
                       // maxLines: 5,
                       decoration: InputDecoration(
@@ -28,7 +28,7 @@ class Booth extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8.0),
                           )),),
 
-                           SizedBox(height: 20),
+                        const   SizedBox(height: 20),
                      TextFormField(
                       // maxLines: 5,
                       decoration: InputDecoration(
@@ -37,7 +37,7 @@ class Booth extends StatelessWidget {
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           )),),
-                          SizedBox(height: 30),
+                         const SizedBox(height: 30),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               fixedSize: const Size(600, 50),
@@ -52,7 +52,7 @@ class Booth extends StatelessWidget {
                                   MaterialPageRoute(
                                       builder: (context) => const Login()));
                             },
-                            child: Text("Create")
+                            child: const Text("Create")
                           )
 
                  ],
@@ -62,7 +62,6 @@ class Booth extends StatelessWidget {
            )
          ],
        ),
-      
     );
   }
 }
