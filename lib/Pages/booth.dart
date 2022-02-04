@@ -1,4 +1,5 @@
 import 'package:ematdan/Pages/login.dart';
+import 'package:ematdan/Pages/successfull.dart';
 import 'package:flutter/material.dart';
 
 class Booth extends StatelessWidget {
@@ -17,8 +18,8 @@ class Booth extends StatelessWidget {
                child: Column(
                  mainAxisAlignment: MainAxisAlignment.center,
                  children: [
-                   Text("Create Voting Booth",style: TextStyle(fontSize: 15,color: Colors.black),),
-                   SizedBox(height: 20),
+                   const Text("Create Voting Booth",style: TextStyle(fontSize: 15,color: Colors.black),),
+                   const SizedBox(height: 20),
                      TextFormField(
                       // maxLines: 5,
                       decoration: InputDecoration(
@@ -28,7 +29,7 @@ class Booth extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8.0),
                           )),),
 
-                           SizedBox(height: 20),
+                           const SizedBox(height: 20),
                      TextFormField(
                       // maxLines: 5,
                       decoration: InputDecoration(
@@ -37,7 +38,7 @@ class Booth extends StatelessWidget {
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           )),),
-                          SizedBox(height: 30),
+                          const SizedBox(height: 30),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               fixedSize: const Size(600, 50),
@@ -50,9 +51,9 @@ class Booth extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const Login()));
+                                      builder: (context) => Successfull()));
                             },
-                            child: Text("Create")
+                            child: const Text("Create")
                           )
 
                  ],
