@@ -23,7 +23,7 @@ class _BlockChainState extends State<BlockChain> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Winner: " + contractConnect.winnerName!.toString(),
+                "Winner: " + contractConnect.winnerIndex!.toString(),
                 style: const TextStyle(fontSize: 30),
               ),
               ElevatedButton(

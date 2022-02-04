@@ -1,5 +1,7 @@
 import 'package:ematdan/Blockchain/block_chain_model.dart';
 import 'package:ematdan/Services/firebase.dart';
+import 'package:ematdan/vote_sucessfull.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,10 +16,13 @@ class VoterCandidates extends StatefulWidget {
 
 class _VoterCandidatesState extends State<VoterCandidates> {
   Stream? getCandidatesSteam;
+  User? user;
   @override
   void initState() {
     getDataFunction();
     super.initState();
+    user = FirebaseAuth.instance.currentUser;
+    print(user!.uid);
   }
 
   bool isLongPressed = false;
@@ -33,6 +38,7 @@ class _VoterCandidatesState extends State<VoterCandidates> {
                       subtitle: snapshot.data.docs[index]["partyName"],
                       title: snapshot.data.docs[index]["candidateName"],
                       index: index,
+                      userId: user!.uid,
                     );
                   })
               : const Center(
@@ -72,18 +78,29 @@ class _VoterCandidatesState extends State<VoterCandidates> {
 }
 
 class CandidateTile extends StatelessWidget {
-  final String title, subtitle;
+  final String title, subtitle, userId;
   final int index;
   const CandidateTile(
       {Key? key,
       required this.title,
       required this.subtitle,
-      required this.index})
+      required this.index,
+      required this.userId})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final contractConnect = Provider.of<BlockChainModel>(context);
+    vote() async {
+      await contractConnect.voteCandidate(BigInt.from(index));
+      print("Vote Complete");
+      Map<String, dynamic> data = {"voted": true};
+      Database().addVotedUser(data, userId).then((value) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const Successfull()));
+      });
+    }
+
     return ListTile(
       onTap: () {
         print(index);
@@ -98,8 +115,8 @@ class CandidateTile extends StatelessWidget {
                   content: Text(title),
                   actions: <Widget>[
                     TextButton(
-                      onPressed: () async {
-                        await contractConnect.voteCandidate(BigInt.from(index));
+                      onPressed: () {
+                        vote();
                         Navigator.of(ctx).pop();
                       },
                       child: const Text("Vote"),

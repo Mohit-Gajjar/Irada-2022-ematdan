@@ -1,7 +1,7 @@
-
 import 'package:ematdan/Pages/Organiser/addbooth.dart';
 import 'package:ematdan/Pages/Organiser/authenticate.dart';
 import 'package:ematdan/Pages/Organiser/parties.dart';
+import 'package:ematdan/Pages/Organiser/winner.dart';
 import 'package:ematdan/Services/authentication.dart';
 import 'package:ematdan/Services/firebase.dart';
 import 'package:ematdan/Services/local_database.dart';
@@ -62,23 +62,34 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
-         actions: [
-            IconButton(
-                onPressed: () {
-                  setState(() {
-                    AuthService().signOut();
-                    LocalDatabase.saveOrganiserLoggedInState(false);
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Authenticate()));
-                  });
-                },
-                icon: const Icon(
-                  Icons.exit_to_app,
-                  color: Colors.black,
-                ))
-          ],
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const WinnerCalCulation()));
+              },
+              icon: const Icon(
+                Icons.unpublished_outlined,
+                color: Colors.black,
+              )),
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  AuthService().signOut();
+                  LocalDatabase.saveOrganiserLoggedInState(false);
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Authenticate()));
+                });
+              },
+              icon: const Icon(
+                Icons.exit_to_app,
+                color: Colors.black,
+              ))
+        ],
       ),
       body: Container(
         child: getBooth(),
@@ -109,7 +120,9 @@ class ListBooths extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>  Parties(boothId: id,)));
+                builder: (context) => Parties(
+                      boothId: id,
+                    )));
       },
       leading: CircleAvatar(
         radius: 30,

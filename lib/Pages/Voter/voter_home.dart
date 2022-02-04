@@ -4,6 +4,7 @@ import 'package:ematdan/Pages/Voter/parties.dart';
 import 'package:ematdan/Services/authentication.dart';
 import 'package:ematdan/Services/firebase.dart';
 import 'package:ematdan/Services/local_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class VoterHome extends StatefulWidget {
@@ -16,6 +17,24 @@ class VoterHome extends StatefulWidget {
 class _VoterHomeState extends State<VoterHome> {
   final formKey = GlobalKey<FormState>();
   TextEditingController searchController = TextEditingController();
+  bool isVoted = false;
+  User? user;
+  @override
+  void initState() {
+    getVoterState();
+    super.initState();
+  }
+
+  getVoterState() async {
+    // ignore: await_only_futures
+    user = await FirebaseAuth.instance.currentUser;
+
+    await Database().isVoted(user!.uid).then((value) {
+      setState(() {
+         isVoted = value!;
+      });
+    });
+  }
 
   QuerySnapshot? snapshot;
 
@@ -82,7 +101,11 @@ class _VoterHomeState extends State<VoterHome> {
                 ))
           ],
         ),
-        body: getBooths());
+        body: isVoted
+            ? const Center(
+                child: Text("Yor have already voted..."),
+              )
+            : getBooths());
   }
 }
 

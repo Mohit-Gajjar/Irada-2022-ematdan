@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ematdan/Services/firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
@@ -11,7 +12,7 @@ class BlockChainModel extends ChangeNotifier {
   final String _wsUrl = "ws://192.168.0.109:7545/";
 
   final String privateKey =
-      "8aaa6d9c91437ad559d2a6be46d2285dd0f2a71097ecea1ef4d2108ac000ba76";
+      "fa32b105e7af499598ce85e28c39041ee8b9fbb91601646673a1f114c60c5312";
 
   BlockChainModel() {
     initialSetup();
@@ -26,7 +27,10 @@ class BlockChainModel extends ChangeNotifier {
   ContractFunction? _winningCandidateName;
   // String partyName = " ";
   bool isLoading = true;
-  BigInt? winnerName;
+  BigInt? winnerIndex;
+  String winningId = " ";
+  String winnerCandidateName = " ";
+
   // ignore: prefer_typing_uninitialized_variables
   var _abiCode;
   Credentials? _credentials;
@@ -66,53 +70,49 @@ class BlockChainModel extends ChangeNotifier {
     _voteCandidate = _contract!.function("vote");
     _addCandidates = _contract!.function("addCandidate");
     _winningCandidateName = _contract!.function("winnerName");
-    getWinner();
-    // print(await _web3client!.call(
-    //     contract: _contract!, function: _getWinningCandidate!, params: []));
+    isLoading = false;
+    notifyListeners();
   }
 
-  String winn = " ";
   Future<void> getWinner() async {
-    // List party = await _web3client!
-    //     .call(contract: _contract!, function: _getParty!, params: []);
-    // partyName = party[0];
-    // print(party[0]);
     List winner = await _web3client!
         .call(contract: _contract!, function: _getCandidateCount!, params: []);
     print(winner[0]);
-    List winnerName = await _web3client!
-        .call(contract: _contract!, function: _winningCandidateName!, params: []);
-    // winnerName = winner[0];
-    winn = winnerName[0];
-    print(winn);
+    winnerIndex = winner[0];
+    List winnerName = await _web3client!.call(
+        contract: _contract!, function: _winningCandidateName!, params: []);
+    winnerCandidateName = winnerName[0];
+    notifyListeners();
+    // print(winnerCandidateName);
     isLoading = false;
-    print("==============");
     notifyListeners();
   }
 
   Future<void> addCandidates(String candidateName) async {
     isLoading = true;
     notifyListeners();
-    print("---------------------");
+    print("Processing Tranansaction");
     await _web3client!.sendTransaction(
         _credentials!,
         Transaction.callContract(
             contract: _contract!,
             function: _addCandidates!,
             parameters: [candidateName]));
-
     print("transaction completed");
-    getWinner();
+    isLoading = false;
+    notifyListeners();
   }
 
   Future<void> voteCandidate(BigInt id) async {
     isLoading = true;
     notifyListeners();
-    print("---------------------");
+    print("Processing Tranansaction");
+
     await _web3client!.sendTransaction(
         _credentials!,
         Transaction.callContract(
             contract: _contract!, function: _voteCandidate!, parameters: [id]));
-    getWinner();
+    isLoading = false;
+    notifyListeners();
   }
 }

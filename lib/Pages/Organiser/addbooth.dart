@@ -31,7 +31,8 @@ class _AddBoothState extends State<AddBooth> {
       Map<String, dynamic> data = {
         "organiser": organiserNameController.text,
         "organisation": organisationNameController.text,
-        "boothId": id
+        "boothId": id,
+        "over": null
       };
       Database()
           .addBooth(data, id)
@@ -51,6 +52,7 @@ class _AddBoothState extends State<AddBooth> {
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
+    
       body: Center(
         child: SizedBox(
           width: MediaQuery.of(context).size.width / 2,
