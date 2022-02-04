@@ -1,5 +1,5 @@
+import 'package:ematdan/Pages/Organiser/organiser_auth.dart';
 import 'package:ematdan/Pages/Voter/voter_auth.dart';
-import 'package:ematdan/Pages/organiser_auth.dart';
 import 'package:flutter/material.dart';
 
 class Authenticate extends StatefulWidget {
@@ -18,11 +18,11 @@ class AuthenticateState extends State<Authenticate> {
         const SizedBox(
           height: 30,
         ),
-        Align(
+        const Align(
           alignment: Alignment.center,
           child: Image(
-            image: const AssetImage("assets/images/v.png"),
-            width: MediaQuery.of(context).size.width / 3.5,
+            image: AssetImage("assets/images/v.png"),
+            width: 200,
           ),
         ),
         const Text(

@@ -31,7 +31,8 @@ class _VoterCandidatesState extends State<VoterCandidates> {
                   itemBuilder: (context, index) {
                     return CandidateTile(
                       subtitle: snapshot.data.docs[index]["partyName"],
-                      title: snapshot.data.docs[index]["candidateName"], index: index,
+                      title: snapshot.data.docs[index]["candidateName"],
+                      index: index,
                     );
                   })
               : const Center(
@@ -49,6 +50,8 @@ class _VoterCandidatesState extends State<VoterCandidates> {
 
   @override
   Widget build(BuildContext context) {
+    final contractConnect = Provider.of<BlockChainModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -59,7 +62,11 @@ class _VoterCandidatesState extends State<VoterCandidates> {
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: getCandidates(),
+      body: contractConnect.isLoading
+          ? const Center(
+              child: Text("Please Wait, Transaction Processing..."),
+            )
+          : getCandidates(),
     );
   }
 }
@@ -67,7 +74,11 @@ class _VoterCandidatesState extends State<VoterCandidates> {
 class CandidateTile extends StatelessWidget {
   final String title, subtitle;
   final int index;
-  const CandidateTile({Key? key, required this.title, required this.subtitle, required this.index})
+  const CandidateTile(
+      {Key? key,
+      required this.title,
+      required this.subtitle,
+      required this.index})
       : super(key: key);
 
   @override
@@ -78,19 +89,23 @@ class CandidateTile extends StatelessWidget {
         print(index);
         showDialog(
           context: context,
-          builder: (ctx) => AlertDialog(
-            title: const Text("Confirm Vote"),
-            content: Text(title),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () async {
-                  await contractConnect.voteCandidate(BigInt.from(index));
-                  Navigator.of(ctx).pop();
-                },
-                child: const Text("Vote"),
-              ),
-            ],
-          ),
+          builder: (ctx) => contractConnect.isLoading
+              ? const Center(
+                  child: Text('Please Wait, Processing transaction...'),
+                )
+              : AlertDialog(
+                  title: const Text("Confirm Vote"),
+                  content: Text(title),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () async {
+                        await contractConnect.voteCandidate(BigInt.from(index));
+                        Navigator.of(ctx).pop();
+                      },
+                      child: const Text("Vote"),
+                    ),
+                  ],
+                ),
         );
       },
       leading: CircleAvatar(

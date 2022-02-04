@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ematdan/Pages/Organiser/authenticate.dart';
 import 'package:ematdan/Pages/Voter/parties.dart';
-import 'package:ematdan/Pages/authenticate.dart';
 import 'package:ematdan/Services/authentication.dart';
 import 'package:ematdan/Services/firebase.dart';
 import 'package:ematdan/Services/local_database.dart';

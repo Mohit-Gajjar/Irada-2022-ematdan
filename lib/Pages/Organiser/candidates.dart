@@ -1,4 +1,5 @@
-import 'package:ematdan/Pages/add_candidate.dart';
+
+import 'package:ematdan/Pages/Organiser/add_candidate.dart';
 import 'package:ematdan/Services/firebase.dart';
 import 'package:flutter/material.dart';
 

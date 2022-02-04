@@ -49,20 +49,19 @@ class _AddCandidateState extends State<AddCandidate> {
   Widget build(BuildContext context) {
     final contractConnect = Provider.of<BlockChainModel>(context);
     return Scaffold(
-            appBar: AppBar(
-              title: const Text(
-                'Add Candidate Info',
-                style: TextStyle(color: Colors.black),
-              ),
-              centerTitle: true,
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-            ),
-            body:contractConnect.isLoading
-        ?  
-        const Center(
-            child: Text("Processing Transaction, Please wait.....")):
-        Center(
+      appBar: AppBar(
+        title: const Text(
+          'Add Candidate Info',
+          style: TextStyle(color: Colors.black),
+        ),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),
+      body: contractConnect.isLoading
+          ? const Center(
+              child: Text("Processing Transaction, Please wait....."))
+          : Center(
               child: SizedBox(
                 width: MediaQuery.of(context).size.width / 2,
                 child: Form(
@@ -97,7 +96,6 @@ class _AddCandidateState extends State<AddCandidate> {
                 ),
               ),
             ),
-          );
-       
+    );
   }
 }

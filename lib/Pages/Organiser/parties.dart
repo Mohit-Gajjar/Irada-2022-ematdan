@@ -1,5 +1,6 @@
-import 'package:ematdan/Pages/add_party.dart';
-import 'package:ematdan/Pages/candidates.dart';
+
+import 'package:ematdan/Pages/Organiser/add_party.dart';
+import 'package:ematdan/Pages/Organiser/candidates.dart';
 import 'package:ematdan/Services/firebase.dart';
 import 'package:flutter/material.dart';
 

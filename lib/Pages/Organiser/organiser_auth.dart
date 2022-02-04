@@ -1,4 +1,5 @@
-import 'package:ematdan/Pages/home.dart';
+
+import 'package:ematdan/Pages/Organiser/organiser_home.dart';
 import 'package:ematdan/Services/authentication.dart';
 import 'package:ematdan/Services/local_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';

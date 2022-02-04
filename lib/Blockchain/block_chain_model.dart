@@ -11,7 +11,7 @@ class BlockChainModel extends ChangeNotifier {
   final String _wsUrl = "ws://192.168.0.109:7545/";
 
   final String privateKey =
-      "e0d7a4571a7a21dac6882244f1139854753ad9d4d84f7acbab1e185b3ebc247e";
+      "8aaa6d9c91437ad559d2a6be46d2285dd0f2a71097ecea1ef4d2108ac000ba76";
 
   BlockChainModel() {
     initialSetup();
@@ -23,6 +23,7 @@ class BlockChainModel extends ChangeNotifier {
   ContractFunction? _voteCandidate;
   ContractFunction? _getCandidateCount;
   ContractFunction? _addCandidates;
+  ContractFunction? _winningCandidateName;
   // String partyName = " ";
   bool isLoading = true;
   BigInt? winnerName;
@@ -61,15 +62,17 @@ class BlockChainModel extends ChangeNotifier {
     _contract = DeployedContract(
         ContractAbi.fromJson(_abiCode, "Auth"), _contractAddress!);
     // _getParty = _contract!.function("getParty");
-    _getCandidateCount = _contract!.function("candidatesCount");
+    _getCandidateCount = _contract!.function("winningProposal");
     _voteCandidate = _contract!.function("vote");
     _addCandidates = _contract!.function("addCandidate");
-    getData();
+    _winningCandidateName = _contract!.function("winnerName");
+    getWinner();
     // print(await _web3client!.call(
     //     contract: _contract!, function: _getWinningCandidate!, params: []));
   }
 
-  Future<void> getData() async {
+  String winn = " ";
+  Future<void> getWinner() async {
     // List party = await _web3client!
     //     .call(contract: _contract!, function: _getParty!, params: []);
     // partyName = party[0];
@@ -77,7 +80,11 @@ class BlockChainModel extends ChangeNotifier {
     List winner = await _web3client!
         .call(contract: _contract!, function: _getCandidateCount!, params: []);
     print(winner[0]);
-    winnerName = winner[0];
+    List winnerName = await _web3client!
+        .call(contract: _contract!, function: _winningCandidateName!, params: []);
+    // winnerName = winner[0];
+    winn = winnerName[0];
+    print(winn);
     isLoading = false;
     print("==============");
     notifyListeners();
@@ -93,7 +100,9 @@ class BlockChainModel extends ChangeNotifier {
             contract: _contract!,
             function: _addCandidates!,
             parameters: [candidateName]));
-    getData();
+
+    print("transaction completed");
+    getWinner();
   }
 
   Future<void> voteCandidate(BigInt id) async {
@@ -104,6 +113,6 @@ class BlockChainModel extends ChangeNotifier {
         _credentials!,
         Transaction.callContract(
             contract: _contract!, function: _voteCandidate!, parameters: [id]));
-    getData();
+    getWinner();
   }
 }

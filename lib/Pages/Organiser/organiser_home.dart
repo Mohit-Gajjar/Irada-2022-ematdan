@@ -1,6 +1,7 @@
-import 'package:ematdan/Pages/authenticate.dart';
-import 'package:ematdan/Pages/addbooth.dart';
-import 'package:ematdan/Pages/parties.dart';
+
+import 'package:ematdan/Pages/Organiser/addbooth.dart';
+import 'package:ematdan/Pages/Organiser/authenticate.dart';
+import 'package:ematdan/Pages/Organiser/parties.dart';
 import 'package:ematdan/Services/authentication.dart';
 import 'package:ematdan/Services/firebase.dart';
 import 'package:ematdan/Services/local_database.dart';

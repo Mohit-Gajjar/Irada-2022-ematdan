@@ -1,11 +1,12 @@
 import 'package:ematdan/Blockchain/block_chain_model.dart';
 import 'package:ematdan/Pages/Voter/voter_home.dart';
-import 'package:ematdan/Pages/authenticate.dart';
-import 'package:ematdan/Pages/home.dart';
 import 'package:ematdan/Services/local_database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'Pages/Organiser/authenticate.dart';
+import 'Pages/Organiser/organiser_home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
