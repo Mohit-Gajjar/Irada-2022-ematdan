@@ -33,6 +33,13 @@ class Database {
     return FirebaseFirestore.instance.collection("booths").snapshots();
   }
 
+  getBoothById(String id) async {
+    return FirebaseFirestore.instance
+        .collection("booths")
+        .where("boothId", isEqualTo: id)
+        .get();
+  }
+
   getParties(String boothId) async {
     return FirebaseFirestore.instance
         .collection("booths")

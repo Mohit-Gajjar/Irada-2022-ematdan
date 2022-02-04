@@ -1,6 +1,8 @@
-import 'package:ematdan/Blockchain/block.dart';
 import 'package:ematdan/Blockchain/block_chain_model.dart';
+import 'package:ematdan/Pages/Voter/voter_home.dart';
+import 'package:ematdan/Pages/authenticate.dart';
 import 'package:ematdan/Pages/home.dart';
+import 'package:ematdan/Services/local_database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,32 +13,60 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (context) => BlockChainModel(),
-        child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
-            home: const Root()),
-      );
+  State<MyApp> createState() => _MyAppState();
 }
 
-class Root extends StatefulWidget {
-  const Root({Key? key}) : super(key: key);
-
+class _MyAppState extends State<MyApp> {
+  bool organiserIsLoggedIn = false, voterIsLoggedIn = false;
   @override
-  _RootState createState() => _RootState();
-}
-
-class _RootState extends State<Root> {
-  @override
-  Widget build(BuildContext context) {
-    return const HomePage();
+  void initState() {
+    checkLoggedInStatus();
+    super.initState();
   }
+
+  void checkLoggedInStatus() async {
+    await LocalDatabase.getOrganiserSharedPrefs().then((value) {
+      // print("organiser shared prefs: " + value.toString());
+      if (value == true) {
+        setState(() {
+          organiserIsLoggedIn = true;
+        });
+      } else if (value == false && value == null) {
+        setState(() {
+          organiserIsLoggedIn = false;
+        });
+      }
+    });
+    await LocalDatabase.getVoterSharedPrefs().then((value) {
+      // print("Voter shared prefs: " + value.toString());
+      if (value == true) {
+        setState(() {
+          voterIsLoggedIn = true;
+        });
+      } else if (value == false && value == null) {
+        setState(() {
+          voterIsLoggedIn = false;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+      create: (context) => BlockChainModel(),
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'E-matdan',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: organiserIsLoggedIn
+              ? const HomePage()
+              : voterIsLoggedIn
+                  ? const VoterHome()
+                  : const Authenticate()));
 }

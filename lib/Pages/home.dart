@@ -1,7 +1,9 @@
-import 'package:ematdan/Pages/candidates.dart';
+import 'package:ematdan/Pages/authenticate.dart';
 import 'package:ematdan/Pages/addbooth.dart';
 import 'package:ematdan/Pages/parties.dart';
+import 'package:ematdan/Services/authentication.dart';
 import 'package:ematdan/Services/firebase.dart';
+import 'package:ematdan/Services/local_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -59,6 +61,23 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
+         actions: [
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    AuthService().signOut();
+                    LocalDatabase.saveOrganiserLoggedInState(false);
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Authenticate()));
+                  });
+                },
+                icon: const Icon(
+                  Icons.exit_to_app,
+                  color: Colors.black,
+                ))
+          ],
       ),
       body: Container(
         child: getBooth(),
