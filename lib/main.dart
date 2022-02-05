@@ -31,7 +31,6 @@ class _MyAppState extends State<MyApp> {
 
   void checkLoggedInStatus() async {
     await LocalDatabase.getOrganiserSharedPrefs().then((value) {
-      // print("organiser shared prefs: " + value.toString());
       if (value == true) {
         setState(() {
           organiserIsLoggedIn = true;
@@ -43,7 +42,6 @@ class _MyAppState extends State<MyApp> {
       }
     });
     await LocalDatabase.getVoterSharedPrefs().then((value) {
-      // print("Voter shared prefs: " + value.toString());
       if (value == true) {
         setState(() {
           voterIsLoggedIn = true;

@@ -13,6 +13,7 @@ class WinnerCalCulation extends StatefulWidget {
 class _WinnerCalCulationState extends State<WinnerCalCulation> {
   void getData(String id) async {
     name = (await Database().winnerName(id))!;
+    setState(() {});
   }
 
   String name = " ";
@@ -35,12 +36,12 @@ class _WinnerCalCulationState extends State<WinnerCalCulation> {
           const SizedBox(
             height: 20,
           ),
-          // Center(
-          //   child: Text("Winner Name: " + name),
-          // ),
-          // const SizedBox(
-          //   height: 20,
-          // ),
+          Center(
+            child: Text("Winner Name: " + name),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
           Center(
             child: Text("Winner Id: " + contractConnect.winnerCandidateName),
           ),
@@ -49,10 +50,10 @@ class _WinnerCalCulationState extends State<WinnerCalCulation> {
           ),
           ElevatedButton(
               onPressed: () async {
-                // id = contractConnect.winnerCandidateName;
-                // print("Winnerid: " + id);
-                // setState(() {});
-                await contractConnect.getWinner();
+             
+                id = await contractConnect.getWinner();
+                getData(id);
+                setState(() {});
               },
               child: const Text("Get Winner"))
         ],

@@ -103,7 +103,7 @@ class _VoterHomeState extends State<VoterHome> {
         ),
         body: isVoted
             ? const Center(
-                child: Text("Yor have already voted..."),
+                child: Text("You have already voted..."),
               )
             : getBooths());
   }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:ematdan/Services/firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
@@ -12,7 +11,7 @@ class BlockChainModel extends ChangeNotifier {
   final String _wsUrl = "ws://192.168.0.109:7545/";
 
   final String privateKey =
-      "fa32b105e7af499598ce85e28c39041ee8b9fbb91601646673a1f114c60c5312";
+      "4572158d34925e69cc3d3b98a5221224128b861328d289a3fd50335aedc8bc2e";
 
   BlockChainModel() {
     initialSetup();
@@ -74,7 +73,7 @@ class BlockChainModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getWinner() async {
+  Future<String> getWinner() async {
     List winner = await _web3client!
         .call(contract: _contract!, function: _getCandidateCount!, params: []);
     print(winner[0]);
@@ -86,6 +85,7 @@ class BlockChainModel extends ChangeNotifier {
     // print(winnerCandidateName);
     isLoading = false;
     notifyListeners();
+    return winnerCandidateName;
   }
 
   Future<void> addCandidates(String candidateName) async {

@@ -36,6 +36,21 @@ class Database {
     return a;
   }
 
+  getCandidateName(String boothId, String partyName) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection("booths")
+        .doc(boothId)
+        .collection('Parties')
+        .doc(partyName)
+        .collection('Candidates')
+        .where("partyName", isEqualTo: partyName)
+        .get();
+    var a = snapshot.docs.isNotEmpty ? snapshot.docs[0]["candidateName"] : "";
+    print(a);
+    return a;
+  }
+
   Future<void> addCandidate(
       data, String boothId, String candidateId, String partyName) async {
     addCan(candidateId, data);

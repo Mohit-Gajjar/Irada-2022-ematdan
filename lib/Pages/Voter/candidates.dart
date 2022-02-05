@@ -19,45 +19,29 @@ class _VoterCandidatesState extends State<VoterCandidates> {
   User? user;
   @override
   void initState() {
-    getDataFunction();
+    // getDataFunction();
+    getData();
     super.initState();
     user = FirebaseAuth.instance.currentUser;
-    print(user!.uid);
   }
 
-  bool isLongPressed = false;
-  Widget getCandidates() {
-    return StreamBuilder(
-        stream: getCandidatesSteam,
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          return snapshot.hasData
-              ? ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    return CandidateTile(
-                      subtitle: snapshot.data.docs[index]["partyName"],
-                      title: snapshot.data.docs[index]["candidateName"],
-                      index: index,
-                      userId: user!.uid,
-                    );
-                  })
-              : const Center(
-                  child: CircularProgressIndicator(),
-                );
-        });
+  String candidateName = " ";
+  getData() async {
+    candidateName = await Database().getCandidateName(widget.id, widget.name);
+    setState(() {});
   }
 
-  getDataFunction() {
-    Database().getCandidates(widget.id, widget.name).then((val) {
-      getCandidatesSteam = val;
-      setState(() {});
+  Future<void> vote() async {
+    Map<String, dynamic> data = {"voted": true};
+    Database().addVotedUser(data, user!.uid).then((value) {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const Successfull()));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final contractConnect = Provider.of<BlockChainModel>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -72,12 +56,63 @@ class _VoterCandidatesState extends State<VoterCandidates> {
           ? const Center(
               child: Text("Please Wait, Transaction Processing..."),
             )
-          : getCandidates(),
+          : Column(
+              children: [
+                Center(
+                  child: Text(
+                    "Party Name: " + widget.name,
+                    style: const TextStyle(fontSize: 30),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    "Candidate Name: " + candidateName,
+                    style: const TextStyle(fontSize: 25),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                InkWell(
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (ctx) => contractConnect.isLoading
+                        ? const Center(
+                            child:
+                                Text("Please Wait, Transaction Processing..."),
+                          )
+                        : AlertDialog(
+                            title: const Text("Confirm Vote"),
+                            content: Text(candidateName),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () async {
+                                  await contractConnect
+                                      .voteCandidate(BigInt.from(0));
+                                  print("Vote Complete");
+                                  vote();
+                                  Navigator.of(ctx).pop();
+                                },
+                                child: const Text("Vote"),
+                              ),
+                            ],
+                          ),
+                  ),
+                  child: const CircleAvatar(
+                    radius: 40,
+                    child: Icon(
+                      Icons.touch_app_outlined,
+                      size: 40,
+                    ),
+                  ),
+                )
+              ],
+            ),
     );
   }
 }
 
-class CandidateTile extends StatelessWidget {
+class CandidateTile extends StatefulWidget {
   final String title, subtitle, userId;
   final int index;
   const CandidateTile(
@@ -89,48 +124,19 @@ class CandidateTile extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final contractConnect = Provider.of<BlockChainModel>(context);
-    vote() async {
-      await contractConnect.voteCandidate(BigInt.from(index));
-      print("Vote Complete");
-      Map<String, dynamic> data = {"voted": true};
-      Database().addVotedUser(data, userId).then((value) {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const Successfull()));
-      });
-    }
+  State<CandidateTile> createState() => _CandidateTileState();
+}
 
+class _CandidateTileState extends State<CandidateTile> {
+  @override
+  Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {
-        print(index);
-        showDialog(
-          context: context,
-          builder: (ctx) => contractConnect.isLoading
-              ? const Center(
-                  child: Text('Please Wait, Processing transaction...'),
-                )
-              : AlertDialog(
-                  title: const Text("Confirm Vote"),
-                  content: Text(title),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        vote();
-                        Navigator.of(ctx).pop();
-                      },
-                      child: const Text("Vote"),
-                    ),
-                  ],
-                ),
-        );
-      },
       leading: CircleAvatar(
         radius: 30,
-        child: Text(title[0]),
+        child: Text(widget.title[0]),
       ),
-      title: Text(title),
-      subtitle: Text(subtitle),
+      title: Text(widget.title),
+      subtitle: Text(widget.subtitle),
     );
   }
 }

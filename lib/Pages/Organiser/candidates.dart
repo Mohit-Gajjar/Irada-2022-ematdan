@@ -1,4 +1,3 @@
-
 import 'package:ematdan/Pages/Organiser/add_candidate.dart';
 import 'package:ematdan/Services/firebase.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,8 @@ class _CandidatesState extends State<Candidates> {
     super.initState();
   }
 
-  bool isLongPressed = false;
+  bool hasData = false;
+
   Widget getCandidates() {
     return StreamBuilder(
         stream: getCandidatesSteam,
@@ -29,6 +29,7 @@ class _CandidatesState extends State<Candidates> {
               ? ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
+                   
                     return CandidateTile(
                       subtitle: snapshot.data.docs[index]["partyName"],
                       title: snapshot.data.docs[index]["candidateName"],
@@ -50,32 +51,33 @@ class _CandidatesState extends State<Candidates> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Candidates',
-          style: TextStyle(color: Colors.black),
+        appBar: AppBar(
+          title: const Text(
+            'Candidates',
+            style: TextStyle(color: Colors.black),
+          ),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
         ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),
-      body: getCandidates(),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(
-          Icons.add,
-          size: 30,
-        ),
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddCandidate(
-                        boothId: widget.id,
-                        partyName: widget.name,
-                      )));
-        },
-      ),
-    );
+        body: getCandidates(),
+        floatingActionButton: !hasData
+            ? FloatingActionButton(
+                child: const Icon(
+                  Icons.add,
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddCandidate(
+                                boothId: widget.id,
+                                partyName: widget.name,
+                              )));
+                },
+              )
+            : Container());
   }
 }
 
